@@ -1,0 +1,79 @@
+class Contact:
+    def __init__(self, Firstname, Lastname, Number1, Number2, Date_of_Birth, Gender):
+        self.Firstname = Firstname
+        self.Lastname = Lastname
+        self.Number1 = Number1
+        self.Number2 = Number2
+        self.Date_of_Birth = Date_of_Birth
+        self.Gender = Gender
+
+
+object = []
+
+# creating object
+i = 0
+
+
+def createContact():
+
+    a = input("Enter the  Firstname: ")
+    b = input("Enter the  Lastname: ")
+    c = input("Enter the phone Number 1: ")
+    d = input("Enter the phone Number 2: ")
+    f = input("Enter the Gender: ")
+    e = input("Enter the Date of Birth(yyy_mm_dd): ")
+    # appending object to the list
+    object.append(Contact(a, b, c, d, e, f))
+
+
+# deleting contact
+def deleteContact():
+    i = int(input("Eter the index of the contact to be deleted: "))
+    object.pop(i-1)
+
+
+# edit a contact
+def editContact():
+    j = int(input("Enter the index of object to be edited: "))
+
+    object[j-1].Firstname = input("Enter the Firstname: ")
+    object[j-1].Lastname = input("Enter the Lastname: ")
+    object[j-1].Number1 = input("Enter the Number 1: ")
+    object[j-1].Number2 = input("Enter the Number 2: ")
+    object[j-1].Gender = input("Enter the Gender: ")
+    object[j-1].Date_of_Birth = input("Enter the Date of Birth(yyy-mm-dd): ")
+
+# showing all contacts
+
+
+def showcontact():
+    print("All your contacts: \n")
+
+    print('{:<7s}{:^15s}{:^15s}{:^17}{:^17}{:^17}{:^10s}'.format(
+        'Sr.No.', 'Firstname', 'Lastname', 'Number1', 'Number2', 'Date of Birth', 'Gender'))
+    print("\n")
+    i = 1
+    for obj in object:
+        print('{:<7d}{:^15s}{:^15s}{:^17}{:^17}{:^17}{:^10s}'.format(
+            i, obj.Firstname, obj.Lastname, obj.Number1, obj.Number2, obj.Date_of_Birth, obj.Gender))
+        i = i+1
+        print("\n")
+
+
+while 1:
+    action = int(input(
+        "Enter the key (1 for adding contact, 2 for deleting, 3 for editing, 4 to show contacts, 5 to exit): "))
+
+    if action == 1:
+        createContact()
+
+    elif action == 2:
+        deleteContact()
+
+    elif action == 3:
+        editContact()
+
+    elif action == 4:
+        showcontact()
+    elif action == 5:
+        break
