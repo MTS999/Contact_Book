@@ -1,97 +1,123 @@
-import argparse
+import json
+import os
 
 
-parser = argparse.ArgumentParser(description="Generate a random password")
-parser.add_argument("-t",
-                    "--creat_table",
-                    default=False,
-                    action="store_true",
-                    help="on starting use -t to create database table")
+def creat_jsonfile():                   # create a json file to store data
 
-parser.add_argument("-a",
-                    "--add_contact",
-                    default=False,
-                    action="store_true",
-                    help="to add a contact")
-
-parser.add_argument("-d",
-                    "--delete_contact",
-                    default=False,
-                    action="store_true",
-                    help="to delete contact")
-parser.add_argument("-s",
-                    "--show_contact",
-                    default=False,
-                    action="store_true",
-                    help="to display contacts")
+    my_list = []                        # list  to be stored
+    with open('TES.json', 'w', encoding='utf-8') as file:  # json file open in write mode
+        # list convert in json data mode and stored in json file
+        json.dump(my_list, file, indent=4, ensure_ascii=False)
 
 
-args = parser.parse_args()
+def add_contact():
+
+    id = int(input("id: "))
+    first_name = input("First name: ")
+    last_name = input("Last name: ")
+    number1 = input("Number1: ")
+    number2 = input("Number2: ")
+    gender = input("gender: ")
+    city = input("city: ")
+    dic = {                              # contact data in form of dictionary
+        "id": id,
+        "Firstname": first_name,
+        "Lastname": last_name,
+        "Number1": number1,
+        "Number2": number2,
+        "Gender": gender,
+        "City": city
+    }
+    with open('TES.json', 'r+', encoding='utf-8') as file:  # open json file as read mode
+        # json data convert in list form
+        my_list = json.load(file)
+        my_list.append(dic)
+        file.seek(0)
+        json.dump(my_list, file, indent=4, ensure_ascii=False) 
 
 
-def contact_book(creat_table, add_contact, delete_contact, show_contact):
-    """
-    Generate a contact_book
-    """
-    import sqlite3
-    conn = sqlite3.connect("sqlite.db")
-    
-    if creat_table:
-        
-        conn.execute('''
-             Create table student(
-                 st_id INTEGER PRIMARY KEY  AUTOINCREMENT ,
-                 Firstname string,
-                 Lastname VARCHAR(15),
-                 Number1 VARCHAR(15),
-                 Number2 VARCHAR(15),
-                 Gender VARCHAR(10),
-                 Date_of_Birth VARCHAR(10)
-                 
-             )
-              ''')
+def delete_contact():
 
-        conn.close()
+    with open("TES.json", 'r', encoding='utf-8') as file:
+        my_list = json.load(file)
 
-    if add_contact:
-        a = input('Enter first name  : ')
-        b = input('Enter last name  : ')
-        c = input('Enter number 1  : ')
-        d = input('Enter number 2  : ')
-        e = input('Enter gender  : ')
-        f = input('Enter Date of birth  : ')
+        Id_delete = int(input(" id to b deleted  :"))
 
-        conn.execute('insert into student(Firstname, Lastname,Number1,Number2,Gender,Date_of_Birth) values(?, ?,?,?,?,?)',
-                     (a, b, c, d, e, f))
+        for idx, obj in enumerate(my_list):
+            if obj['id'] == Id_delete:
+                my_list.pop(idx)
 
-        conn.commit()
-        conn.close()
+    os.remove("TES.json")  # remove json file
 
-    if delete_contact:
-        
-        st_id = input("Enter the student ID  :-")
-        conn.execute("DELETE FROM student where st_id="+st_id)
-        conn.commit()
-        conn.close()
-    if show_contact:
-        import sqlite3
-        conn = sqlite3.connect("sqlite.db")
-
-        data = list(conn.execute("SELECT * FROM student "))
-
-        print('{:<7s}{:^13s}{:^13s}{:^15}{:^15}{:^17}{:^8s}'.format(
-            'Sr.No.', 'Firstname', 'Lastname', 'Number1', 'Number2', 'Gender','Date of Birth'))
-        i = 0
-        while i < len(data):
-            print('{:<7d}{:^13s}{:^13s}{:^15}{:^15}{:^17}{:^8s}'.format(
-                data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5], data[i][6]))
-            i = i+1
-
-   
+    # create new json file with same name and data is stored in new json file
+    with open('TES.json', 'w', encoding='utf-8') as file:
+        json.dump(my_list, file, indent=4, ensure_ascii=False)
 
 
-if __name__ == '__main__':
+def edit_contact():
 
-    contact_book(args.creat_table, args.add_contact,
-                 args.delete_contact, args.show_contact)
-    exit(0)
+    with open("TES.json", 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    Id_edit = int(input("id to b edited: "))
+    id = int(input("Id:"))
+    first_name = input("First name: ")
+    last_name = input("Last name: ")
+    number1 = input("Number1: ")
+    number2 = input("Number2: ")
+    gender = input("Gender: ")
+    city = input("City: ")
+
+    for idx, obj in enumerate(data):
+        if obj['id'] == Id_edit:
+            obj["id"] = id
+            obj["Firstname"] = first_name
+            obj["Lastname"] = last_name
+            obj["Number1"] = number1
+            obj["Number2"] = number2
+            obj["Gender"] = gender
+            obj["City"] = city
+
+    os.remove("TES.json")
+
+    with open('TES.json', 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
+
+def show_data():
+
+    with open('TES.json', 'r+', encoding='utf-8') as file:
+        data = json.load(file)
+
+    print('{:<4s}{:^15s}{:^15s}{:^17}{:^17}{:^12}{:^15s}'.format(
+        'ID', 'Firstname', 'Lastname', 'Number1', 'Number2',  'Gender', "city"))
+
+    for i in range(len(data)):
+        print('{:<4d}{:^15s}{:^15s}{:^17}{:^17}{:^12}{:^15s}'.format(
+            data[i]["id"], data[i]["Firstname"], data[i]["Lastname"], data[i]["Number1"], data[i]["Number2"], data[i]["Gender"], data[i]["City"],))
+
+
+while True:
+
+    action = int(input(
+        " the key (1 for creat json file, 2 for add contact, 3 for delete contact,4 for edit contact, 5 to show contacts, 6 to exit): "))
+    if action == 1:
+
+        creat_jsonfile()
+    if action == 2:
+
+        add_contact()
+
+    elif action == 3:
+
+        delete_contact()
+
+    elif action == 4:
+        edit_contact()
+
+    elif action == 5:
+
+        show_data()
+
+    elif action == 6:
+        break
