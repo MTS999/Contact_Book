@@ -9,16 +9,8 @@ def creat_jsonfile():                   # create a json file to store data
         # list convert in json data mode and stored in json file
         json.dump(my_list, file, indent=4, ensure_ascii=False)
 
+def add_contact(id,first_name,last_name,number1,number2,gender,city):
 
-def add_contact():
-
-    id = int(input("id: "))
-    first_name = input("First name: ")
-    last_name = input("Last name: ")
-    number1 = input("Number1: ")
-    number2 = input("Number2: ")
-    gender = input("gender: ")
-    city = input("city: ")
     dic = {                              # contact data in form of dictionary
         "id": id,
         "Firstname": first_name,
@@ -36,12 +28,10 @@ def add_contact():
         json.dump(my_list, file, indent=4, ensure_ascii=False) 
 
 
-def delete_contact():
+def delete_contact(Id_delete):
 
     with open("TES.json", 'r', encoding='utf-8') as file:
         my_list = json.load(file)
-
-        Id_delete = int(input(" id to b deleted  :"))
 
         for idx, obj in enumerate(my_list):
             if obj['id'] == Id_delete:
@@ -54,23 +44,13 @@ def delete_contact():
         json.dump(my_list, file, indent=4, ensure_ascii=False)
 
 
-def edit_contact():
+def edit_contact(Id_edit,first_name,last_name,number1,number2,gender,city):
 
     with open("TES.json", 'r', encoding='utf-8') as file:
         data = json.load(file)
 
-    Id_edit = int(input("id to b edited: "))
-    id = int(input("Id:"))
-    first_name = input("First name: ")
-    last_name = input("Last name: ")
-    number1 = input("Number1: ")
-    number2 = input("Number2: ")
-    gender = input("Gender: ")
-    city = input("City: ")
-
     for idx, obj in enumerate(data):
         if obj['id'] == Id_edit:
-            obj["id"] = id
             obj["Firstname"] = first_name
             obj["Lastname"] = last_name
             obj["Number1"] = number1
@@ -89,35 +69,16 @@ def show_data():
     with open('TES.json', 'r+', encoding='utf-8') as file:
         data = json.load(file)
 
-    print('{:<4s}{:^15s}{:^15s}{:^17}{:^17}{:^12}{:^15s}'.format(
+    print('{:<4}{:^15}{:^15}{:^17}{:^17}{:^12}{:^15}'.format(
         'ID', 'Firstname', 'Lastname', 'Number1', 'Number2',  'Gender', "city"))
 
     for i in range(len(data)):
-        print('{:<4d}{:^15s}{:^15s}{:^17}{:^17}{:^12}{:^15s}'.format(
+        print('{:<4}{:^15s}{:^15s}{:^17}{:^17}{:^12}{:^15}'.format(
             data[i]["id"], data[i]["Firstname"], data[i]["Lastname"], data[i]["Number1"], data[i]["Number2"], data[i]["Gender"], data[i]["City"],))
-
-
-while True:
-
-    action = int(input(
-        " the key (1 for creat json file, 2 for add contact, 3 for delete contact,4 for edit contact, 5 to show contacts, 6 to exit): "))
-    if action == 1:
-
-        creat_jsonfile()
-    if action == 2:
-
-        add_contact()
-
-    elif action == 3:
-
-        delete_contact()
-
-    elif action == 4:
-        edit_contact()
-
-    elif action == 5:
-
-        show_data()
-
-    elif action == 6:
-        break
+                
+   
+# creat_jsonfile()     #call only one time
+# add_contact("3","First","last",234234,43242,"gender","city")
+# delete_contact("3")
+# edit_contact("id","Firstname","lastname","number1","number2","gender","1") 
+show_data()
